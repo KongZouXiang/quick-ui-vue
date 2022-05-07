@@ -9,12 +9,13 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './dept.data';
 
-  import { getDeptList } from '/@/api/system';
+  import { getAllDeptList, updateDeptById, addDept } from '/@/api/system';
   export default defineComponent({
     name: 'DeptModal',
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
+      const record = ref<any>({});
       const isUpdate = ref(true);
 
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
@@ -29,13 +30,14 @@
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
+          record.value = data.record;
           setFieldsValue({
             ...data.record,
           });
         }
-        const treeData = await getDeptList();
-        updateSchema({
-          field: 'parentDept',
+        const treeData = await getAllDeptList();
+        await updateSchema({
+          field: 'parentId',
           componentProps: { treeData },
         });
       });
@@ -47,6 +49,13 @@
           const values = await validate();
           setModalProps({ confirmLoading: true });
           // TODO custom api
+          if (unref(isUpdate)) {
+            let { id } = unref(record);
+            await updateDeptById({ id, ...values });
+          } else {
+            await addDept(values);
+          }
+
           console.log(values);
           closeModal();
           emit('success');

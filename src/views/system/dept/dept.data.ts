@@ -65,9 +65,10 @@ export const formSchema: FormSchema[] = [
     label: '部门名称',
     component: 'Input',
     required: true,
+    colProps: { span: 24 },
   },
   {
-    field: 'parentDept',
+    field: 'parentId',
     label: '上级部门',
     component: 'TreeSelect',
 
@@ -79,13 +80,15 @@ export const formSchema: FormSchema[] = [
       },
       getPopupContainer: () => document.body,
     },
-    required: true,
+    required: false,
+    colProps: { span: 24 },
   },
   {
-    field: 'orderNo',
+    field: 'sort',
     label: '排序',
     component: 'InputNumber',
     required: true,
+    colProps: { span: 24 },
   },
   {
     field: 'status',
@@ -99,10 +102,12 @@ export const formSchema: FormSchema[] = [
       ],
     },
     required: true,
+    colProps: { span: 24 },
   },
   {
     label: '备注',
     field: 'remark',
     component: 'InputTextArea',
+    colProps: { span: 24 },
   },
 ];

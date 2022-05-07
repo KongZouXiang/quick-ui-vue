@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增部门 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增字典</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -10,6 +10,10 @@
             {
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
+            },
+            {
+              icon: 'clarity:note-edit-line',
+              onClick: handleOpenDictItemDrawer.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -23,40 +27,41 @@
         />
       </template>
     </BasicTable>
-    <DeptModal @register="registerModal" @success="handleSuccess" />
+    <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
+    <DictItemDrawer @register="registerDictItemDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getDeptListTree } from '/@/api/system';
+  import { getDictListPage } from '/@/api/system';
 
-  import { useModal } from '/@/components/Modal';
-  import DeptModal from './DeptModal.vue';
+  import { useDrawer } from '/@/components/Drawer';
+  import RoleDrawer from './RoleDrawer.vue';
+  import DictItemDrawer from './DictItemDrawer/index.vue';
 
-  import { columns, searchFormSchema } from './dept.data';
+  import { columns, searchFormSchema } from './role.data';
 
   export default defineComponent({
-    name: 'DeptManagement',
-    components: { BasicTable, DeptModal, TableAction },
+    name: 'RoleManagement',
+    components: { BasicTable, DictItemDrawer, RoleDrawer, TableAction },
     setup() {
-      const [registerModal, { openModal }] = useModal();
+      const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerDictItemDrawer, { openDrawer: openDictItemDrawer }] = useDrawer();
+
       const [registerTable, { reload }] = useTable({
-        title: '部门列表',
-        api: getDeptListTree,
+        title: '角色列表',
+        api: getDictListPage,
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
         },
-        pagination: false,
-        striped: false,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
-        canResize: false,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -65,15 +70,21 @@
           fixed: undefined,
         },
       });
+      function handleOpenDictItemDrawer(record: Recordable) {
+        openDictItemDrawer(true, {
+          isUpdate: false,
+          record,
+        });
+      }
 
       function handleCreate() {
-        openModal(true, {
+        openDrawer(true, {
           isUpdate: false,
         });
       }
 
       function handleEdit(record: Recordable) {
-        openModal(true, {
+        openDrawer(true, {
           record,
           isUpdate: true,
         });
@@ -88,8 +99,10 @@
       }
 
       return {
+        handleOpenDictItemDrawer,
+        registerDictItemDrawer,
         registerTable,
-        registerModal,
+        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

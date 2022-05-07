@@ -77,7 +77,7 @@ const system: AppRouteModule = {
         title: '字典管理',
         ignoreKeepAlive: true,
       },
-      component: () => import('/@/views/system/dept/index.vue'),
+      component: () => import('/@/views/system/dict/index.vue'),
     },
     {
       path: 'changePassword',

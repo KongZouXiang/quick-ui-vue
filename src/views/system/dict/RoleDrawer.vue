@@ -8,16 +8,6 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
-      <template #menu="{ model, field }">
-        <BasicTree
-          v-model:value="model[field]"
-          :treeData="treeData"
-          :fieldNames="{ title: 'name', key: 'id' }"
-          checkable
-          toolbar
-          title="菜单分配"
-        />
-      </template>
     </BasicForm>
   </BasicDrawer>
 </template>
@@ -26,18 +16,16 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './role.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { BasicTree, TreeItem } from '/@/components/Tree';
 
-  import { addRole, getMenuListTree, updateRoleById } from '/@/api/system';
+  import { addDict, updateDictById } from '/@/api/system';
 
   export default defineComponent({
     name: 'RoleDrawer',
-    components: { BasicDrawer, BasicForm, BasicTree },
+    components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const record = ref<any>({});
       const isUpdate = ref(true);
-      const treeData = ref<TreeItem[]>([]);
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -48,10 +36,7 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         await resetFields();
         setDrawerProps({ confirmLoading: false });
-        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          treeData.value = (await getMenuListTree()) as any as TreeItem[];
-        }
+
 
         isUpdate.value = !!data?.isUpdate;
 
@@ -63,7 +48,7 @@
         }
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增字典' : '编辑字典'));
 
       async function handleSubmit() {
         try {
@@ -72,9 +57,9 @@
 
           if (unref(isUpdate)) {
             let { id } = unref(record);
-            await updateRoleById({ id, ...values });
+            await updateDictById({ id, ...values });
           } else {
-            await addRole(values);
+            await addDict(values);
           }
 
           console.log(values);
@@ -91,7 +76,6 @@
         registerForm,
         getTitle,
         handleSubmit,
-        treeData,
       };
     },
   });
