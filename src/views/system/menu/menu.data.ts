@@ -140,7 +140,6 @@ export const formSchema: FormSchema[] = [
     label: '组件路径',
     component: 'Input',
     ifShow: ({ values }) =>{
-      debugger;
       return isMenu(values.type)
     },
   },

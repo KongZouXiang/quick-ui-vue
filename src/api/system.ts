@@ -16,9 +16,9 @@ import { listToTree } from '/@/utils/helper/treeHelper';
 enum Api {
   UserPageList = '/system/user/listPage',
   AccountList = '/system/user/getAccountList',
-  IsAccountExist = '/system/user/accountExist',
+  IsAccountExist = '/system/user/isNameExist',
   setRoleStatus = '/system/user/setRoleStatus',
-  addUser = '/system/user/add',
+  addUser = '/system/user/addUser',
   updateUserById = '/system/user/updateById',
 
   DeptList = '/system/dept/list',
@@ -36,7 +36,7 @@ enum Api {
   RolePageList = '/system/role/listPage',
   addRole = '/system/role/add',
   updateRoleById = '/system/role/updateById',
-  GetAllRoleList = '/system/getAllRoleList',
+  GetAllRoleList = '/system/role/list',
 
   DictPageList = '/system/dict/listPage',
   addDict = '/system/dict/add',
@@ -118,8 +118,8 @@ export const updateRoleById = (params?: RoleParams) =>
 export const setRoleStatus = (id: number, status: string) =>
   defHttp.post({ url: Api.setRoleStatus, params: { id, status } });
 
-export const isAccountExist = (account: string) =>
-  defHttp.post({ url: Api.IsAccountExist, params: { account } }, { errorMessageMode: 'none' });
+export const isAccountExist = (username: string) =>
+  defHttp.get({ url: Api.IsAccountExist, params: { username } }, { errorMessageMode: 'none' });
 
 //***********字典
 export const getDictListPage = (params?: RolePageParams) =>

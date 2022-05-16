@@ -82,17 +82,18 @@ export const accountFormSchema: FormSchema[] = [
   },
   {
     label: '角色',
-    field: 'role',
+    field: 'roleId',
     component: 'ApiSelect',
     componentProps: {
       api: getAllRoleList,
-      labelField: 'roleName',
-      valueField: 'roleValue',
+      labelField: 'name',
+      valueField: 'id',
     },
     required: true,
+    colProps: { span: 24 },
   },
   {
-    field: 'dept',
+    field: 'deptId',
     label: '所属部门',
     component: 'TreeSelect',
     componentProps: {
